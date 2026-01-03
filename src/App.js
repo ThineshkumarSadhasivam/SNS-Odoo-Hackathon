@@ -1,14 +1,20 @@
 import React from 'react';
 import './App.css'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './Dashboard'; 
-import NewTrip from './NewTrip';// Changed to capital D to match standard naming
-
+import NewTrip from './NewTrip';
+import TripSections from './TripSections';
 function App() {
   return (
-    <div className="App">
-      <Dashboard />
-      <NewTrip/>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/new-trip" element={<NewTrip />} />
+          <Route path="/trip-sections" element={<TripSections />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

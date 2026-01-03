@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, ListFilter, ArrowUpDown, Plus, User, ChevronRight, MapPin, Calendar, Star, Globe, Plane, Heart, Settings, Bell, TrendingUp, Clock, Users, Sun, Moon, Cloud, Zap, Award, Compass, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
   const [darkMode, setDarkMode] = useState(true);
   const [weather, setWeather] = useState({ temp: 22, condition: 'Sunny', location: 'New York' });
   
-  // New state for filter and search functionality
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,7 +18,6 @@ const Dashboard = () => {
     activities: []
   });
   
-  // Filter options data
   const filterCategories = ['Beach', 'Mountain', 'City', 'Cultural', 'Adventure', 'Luxury', 'Budget'];
   const activityOptions = ['Scuba Diving', 'Skiing', 'Hiking', 'Sightseeing', 'Shopping', 'Spa', 'Cultural Tours'];
   const sortOptions = [
@@ -119,7 +119,7 @@ const Dashboard = () => {
     { 
       location: 'Andaman Islands', 
       date: 'Oct 2025', 
-      img: 'https://images.unsplash.com/photo-1589133644743-57448c3fb1a8?auto=format&fit=crop&q=80&w=800',
+      img: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=1740&auto=format&fit=crop',
       status: 'COMPLETED',
       rating: 4.8,
       days: 7,
@@ -130,7 +130,7 @@ const Dashboard = () => {
     { 
       location: 'Swiss Alps', 
       date: 'Aug 2025', 
-      img: 'https://images.unsplash.com/photo-1626509653293-3532298642a8?auto=format&fit=crop&q=80&w=800',
+      img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=1740&auto=format&fit=crop',
       status: 'COMPLETED',
       rating: 4.9,
       days: 5,
@@ -151,30 +151,24 @@ const Dashboard = () => {
     }
   ];
 
-  // Apply filters to regions
   const filteredRegions = regions.filter(region => {
-    // Search filter
     if (searchQuery && !region.name.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
     
-    // Category filter
     if (selectedFilters.category.length > 0 && 
         !selectedFilters.category.some(cat => region.category.includes(cat))) {
       return false;
     }
     
-    // Price filter
     if (region.price < selectedFilters.priceRange.min || region.price > selectedFilters.priceRange.max) {
       return false;
     }
     
-    // Rating filter
     if (region.rating < selectedFilters.rating) {
       return false;
     }
     
-    // Activities filter
     if (selectedFilters.activities.length > 0 && 
         !selectedFilters.activities.some(activity => region.activities.includes(activity))) {
       return false;
@@ -183,13 +177,10 @@ const Dashboard = () => {
     return true;
   });
 
-  // Apply sorting
   const sortedRegions = [...filteredRegions].sort((a, b) => {
-    // Default sorting by popularity
     return b.popularity - a.popularity;
   });
 
-  // Handle filter selection
   const toggleCategoryFilter = (category) => {
     setSelectedFilters(prev => ({
       ...prev,
@@ -218,7 +209,6 @@ const Dashboard = () => {
     setSearchQuery('');
   };
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showFilterOptions && !event.target.closest('.filter-dropdown')) {
@@ -709,7 +699,6 @@ const Dashboard = () => {
                         <button
                           key={option.id}
                           onClick={() => {
-                            // Implement sorting logic here
                             console.log('Sort by:', option.id);
                             setShowSortOptions(false);
                           }}
@@ -951,22 +940,253 @@ const Dashboard = () => {
         )}
       </section>
 
-      {/* Remaining sections (Travel History Timeline, Enhanced Floating CTA, Bottom Navigation) */}
-      {/* ... Keep all the remaining sections exactly as they were in your original code ... */}
-      
-      {/* Travel History Timeline Section */}
+      {/* Travel History Timeline */}
       <section className="mb-20 md:mb-24">
-        {/* ... Keep exactly as is ... */}
+        <div className="flex items-center justify-between mb-8 md:mb-10">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="relative">
+              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shadow-xl ${
+                darkMode 
+                  ? 'bg-gradient-to-br from-purple-500 to-pink-500 shadow-purple-500/30' 
+                  : 'bg-gradient-to-br from-purple-600 to-pink-500 shadow-purple-500/30'
+              }`}>
+                <Clock size={20} className="text-white" />
+              </div>
+            </div>
+            <div>
+              <h3 className={`text-xl md:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                Your Journey Timeline
+              </h3>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm md:text-base`}>
+                Relive your travel memories
+              </p>
+            </div>
+          </div>
+          <button className={`hidden md:group flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-300 ${
+            darkMode 
+              ? 'bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30' 
+              : 'bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-purple-400'
+          }`}>
+            <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-700'}`}>
+              VIEW FULL TIMELINE
+            </span>
+            <ChevronRight size={16} className="group-hover:translate-x-2 transition-transform" />
+          </button>
+        </div>
+
+        <div className="relative">
+          <div className={`absolute left-6 md:left-8 top-0 bottom-0 w-0.5 ${
+            darkMode 
+              ? 'bg-gradient-to-b from-purple-500 via-pink-500 to-transparent' 
+              : 'bg-gradient-to-b from-purple-500 via-pink-400 to-transparent'
+          }`}></div>
+          
+          <div className="space-y-6 md:space-y-8 pl-8 md:pl-12">
+            {previousTrips.map((trip, i) => (
+              <div 
+                key={i}
+                className="group relative cursor-pointer transform hover:-translate-x-1 md:hover:-translate-x-2 transition-all duration-300"
+              >
+                <div className={`absolute -left-10 md:-left-14 top-6 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center shadow-lg ${
+                  darkMode 
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-purple-500/30' 
+                    : 'bg-gradient-to-r from-purple-600 to-pink-500 shadow-purple-500/30'
+                }`}>
+                  <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
+                </div>
+                
+                <div className={`rounded-2xl md:rounded-3xl overflow-hidden border transition-all duration-300 ${
+                  darkMode 
+                    ? 'bg-black/40 backdrop-blur-sm border-white/10 group-hover:border-purple-500/30' 
+                    : 'bg-white/90 backdrop-blur-sm border-gray-200 group-hover:border-purple-400'
+                }`}>
+                  <div className="md:flex">
+                    <div className="md:w-2/5 relative h-48 md:h-64 overflow-hidden">
+                      <img 
+                        src={trip.img} 
+                        alt={trip.location} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        onError={addDefaultSrc}
+                      />
+                      <div className={`absolute inset-0 ${
+                        darkMode 
+                          ? 'bg-gradient-to-r from-black/60 via-transparent to-transparent' 
+                          : 'bg-gradient-to-r from-black/40 via-transparent to-transparent'
+                      }`}></div>
+                      
+                      <div className="absolute top-4 md:top-6 left-4 md:left-6">
+                        <div className="relative">
+                          <div className={`absolute inset-0 rounded-full blur-sm ${
+                            darkMode 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500' 
+                              : 'bg-gradient-to-r from-green-400 to-emerald-400'
+                          }`}></div>
+                          <div className={`relative rounded-full px-3 md:px-4 py-1.5 md:py-2 text-xs font-bold flex items-center gap-1 md:gap-2 ${
+                            darkMode 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500' 
+                              : 'bg-gradient-to-r from-green-500 to-emerald-500'
+                          } text-white`}>
+                            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full animate-pulse"></div>
+                            {trip.status}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="md:w-3/5 p-4 md:p-8">
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+                        <div className="mb-4 md:mb-0">
+                          <h4 className={`text-xl md:text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {trip.location}
+                          </h4>
+                          <div className={`flex items-center gap-3 md:gap-4 text-xs md:text-sm mb-4 ${
+                            darkMode ? 'text-gray-400' : 'text-gray-600'
+                          }`}>
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <Calendar size={12} />
+                              <span>{trip.date}</span>
+                            </div>
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <Clock size={12} />
+                              <span>{trip.days} days</span>
+                            </div>
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <Users size={12} />
+                              <span>{trip.travelers} travelers</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-left md:text-right">
+                          <div className={`text-2xl md:text-3xl font-bold mb-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {trip.price}
+                          </div>
+                          <div className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            total cost
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-4 md:mb-6">
+                        <div className={`text-xs md:text-sm mb-2 md:mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Activities Enjoyed:
+                        </div>
+                        <div className="flex flex-wrap gap-1 md:gap-2">
+                          {trip.activities.map((activity, idx) => (
+                            <span 
+                              key={idx}
+                              className={`px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs md:text-sm transition-colors cursor-pointer ${
+                                darkMode 
+                                  ? 'bg-white/5 hover:bg-white/10' 
+                                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                              }`}
+                            >
+                              {activity}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0">
+                        <div className="flex items-center gap-2">
+                          <Star size={14} className="text-yellow-400 fill-yellow-400" />
+                          <span className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {trip.rating}
+                          </span>
+                          <span className={`text-xs md:text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            / 5.0
+                          </span>
+                        </div>
+                        
+                        <div className="flex gap-2 md:gap-3">
+                          <button className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-xs md:text-sm transition-colors flex-1 md:flex-none ${
+                            darkMode 
+                              ? 'bg-white/5 hover:bg-white/10' 
+                              : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                          }`}>
+                            View Photos
+                          </button>
+                          <button className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold transition-opacity flex-1 md:flex-none ${
+                            darkMode 
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90' 
+                              : 'bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90'
+                          } text-white`}>
+                            Book Again
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Enhanced Floating CTA */}
       <div className="fixed bottom-6 md:bottom-8 right-4 md:right-8 z-50">
-        {/* ... Keep exactly as is ... */}
+        <button 
+          onClick={() => navigate('/new-trip')}
+          className="group relative"
+        >
+          <div className={`absolute inset-0 rounded-xl md:rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500 ${
+            darkMode 
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-500' 
+              : 'bg-gradient-to-r from-blue-500 to-blue-600'
+          }`}></div>
+          
+          <div className={`relative text-white px-4 md:px-8 py-3 md:py-5 rounded-xl md:rounded-2xl font-bold flex items-center gap-2 md:gap-4 hover:scale-105 transition-transform duration-300 shadow-2xl ${
+            darkMode 
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 shadow-cyan-500/30' 
+              : 'bg-gradient-to-r from-blue-600 to-blue-700 shadow-blue-500/30'
+          }`}>
+            <div className="relative">
+              <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
+              <div className="absolute -inset-1 md:-inset-2 bg-white/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <span className="text-xs md:text-sm uppercase tracking-widest">New Trip</span>
+          </div>
+          
+          <div className={`absolute -top-1 md:-top-2 -right-1 md:-right-2 w-4 h-4 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold animate-bounce ${
+            darkMode 
+              ? 'bg-gradient-to-r from-red-500 to-pink-500' 
+              : 'bg-gradient-to-r from-red-400 to-pink-400'
+          }`}>
+            3
+          </div>
+        </button>
       </div>
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-40 md:hidden">
-        {/* ... Keep exactly as is ... */}
+        <div className={`flex items-center gap-1 backdrop-blur-xl rounded-2xl p-1 shadow-2xl ${
+          darkMode 
+            ? 'bg-black/80 border border-white/10' 
+            : 'bg-white/90 border border-gray-200'
+        }`}>
+          {[
+            { icon: Search, label: 'Explore', active: true },
+            { icon: Globe, label: 'Destinations' },
+            { icon: Heart, label: 'Saved' },
+            { icon: User, label: 'Profile' },
+          ].map((item, i) => (
+            <button 
+              key={i}
+              className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 min-w-[60px] ${
+                item.active 
+                  ? darkMode 
+                    ? 'text-cyan-400 bg-white/10' 
+                    : 'text-blue-600 bg-blue-50'
+                  : darkMode
+                    ? 'text-gray-400 hover:text-white hover:bg-white/5'
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100'
+              }`}
+            >
+              <item.icon size={18} />
+              <span className="text-[10px] mt-0.5">{item.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Custom Animations */}
